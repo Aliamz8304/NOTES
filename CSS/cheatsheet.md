@@ -63,19 +63,21 @@ object-position: top center;
 📐 Flexbox:
 display: flex;
 flex-direction: column;
-justify-content: center;
-align-items: stretch;
+justify-content: center; /*horiontal*/
+align-items: stretch; /*vertical*/
 flex-wrap: wrap;
 gap: 20px;
+flex: 1;
 flex-grow: 1;
 flex-shrink: 0;
 flex-basis: auto;
 ====================================================================================================================================================================================================================
 🧮 Grid:
 display: grid;
-grid-template-columns: repeat(4, 1fr);
+grid-template-columns: repeat(4, 1fr); /*"fr means: free space", "you can change number"*/
 grid-template-rows: auto;
-grid-gap: 20px;
+grid-gap: 20px; /*gap is a space betwin columns*/
+row-gap: 20px; /*gap is a space betwin rows*/
 grid-template-areas:
   "header header header header"
   "sidebar content content content"

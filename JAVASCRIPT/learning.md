@@ -936,5 +936,4 @@ const obj = JSON.parse(str);      // { name: "Ali", age: 25 }
 - Objects are reference types—assigning them copies the reference, not the value.
 - You can use `const` with objects and still modify their properties.
 - Most APIs and data formats (like JSON) are based on objects.
-
-```
+---

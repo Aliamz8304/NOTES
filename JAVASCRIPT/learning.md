@@ -938,4 +938,3 @@ const obj = JSON.parse(str);      // { name: "Ali", age: 25 }
 - Most APIs and data formats (like JSON) are based on objects.
 
 ```
----

@@ -375,3 +375,567 @@ switch (day) {
 - `switch` works best when comparing a single value against multiple possible matches.
 
 ---
+```markdown
+# 📘 Chapter: Functions in JavaScript
+
+## 🧠 What Is a Function?
+A function is a reusable block of code that performs a specific task when called.
+
+```js
+function greet(name) {
+  console.log("Hello " + name + "!");
+}
+
+greet("Ali"); // Output: Hello Ali!
+```
+
+---
+
+## 🛠️ Ways to Define Functions
+
+### 1. Function Declaration
+```js
+function sum(a, b) {
+  return a + b;
+}
+```
+
+### 2. Function Expression
+```js
+const multiply = function(a, b) {
+  return a * b;
+};
+```
+
+### 3. Arrow Function
+```js
+const divide = (a, b) => a / b;
+```
+
+> ⚠️ Arrow functions don’t have their own `this`. Avoid using them as object methods or class methods.
+
+---
+
+## 🎯 Parameters and Arguments
+
+### Default Parameters
+```js
+function greet(name = "Guest") {
+  console.log("Hello " + name);
+}
+```
+
+### Rest Parameters
+```js
+function total(...nums) {
+  return nums.reduce((acc, val) => acc + val, 0);
+}
+```
+
+---
+
+## 🔁 Recursive Functions
+
+Functions that call themselves to solve problems step-by-step.
+
+```js
+function factorial(n) {
+  if (n === 0) return 1;
+  return n * factorial(n - 1);
+}
+```
+
+---
+
+## 🧩 Functions as First-Class Citizens
+
+Functions can be:
+
+- Assigned to variables
+- Passed as arguments
+- Returned from other functions
+
+```js
+function operate(fn, a, b) {
+  return fn(a, b);
+}
+
+const add = (x, y) => x + y;
+
+operate(add, 5, 3); // Output: 8
+```
+
+---
+
+## 🧠 Key Notes
+
+- A function with no `return` returns `undefined`.
+- Arrow functions don’t bind their own `this`.
+- Functions can be nested inside other functions.
+- Functions can form **closures**, retaining access to outer variables even after execution.
+
+## 🧠 Advanced Concepts in JavaScript Functions
+
+### 🔒 Closures
+
+A **closure** happens when a function “remembers” variables from its outer scope, even after that outer function has finished executing.
+
+```js
+function makeCounter() {
+  let count = 0;
+  return function() {
+    count++;
+    return count;
+  };
+}
+
+const counter = makeCounter();
+counter(); // 1
+counter(); // 2
+```
+
+> ✅ Useful for encapsulation, private variables, and stateful logic.
+
+---
+
+### 🧭 Scope and Hoisting
+
+- **Function declarations** are hoisted: you can call them before they’re defined.
+- **Function expressions** and **arrow functions** are *not* hoisted.
+
+```js
+sayHi(); // Works
+
+function sayHi() {
+  console.log("Hi!");
+}
+```
+
+```js
+sayBye(); // ❌ Error
+
+const sayBye = function() {
+  console.log("Bye!");
+};
+```
+
+---
+
+### 🧵 Callback Functions
+
+A **callback** is a function passed into another function to be executed later.
+
+```js
+function fetchData(callback) {
+  setTimeout(() => {
+    callback("Data loaded");
+  }, 1000);
+}
+
+fetchData((msg) => console.log(msg));
+```
+
+> 🔁 Used heavily in asynchronous code, especially before Promises and async/await.
+
+---
+
+### 🧪 IIFE (Immediately Invoked Function Expression)
+
+A function that runs immediately after it’s defined.
+
+```js
+(function() {
+  console.log("I run instantly!");
+})();
+```
+
+> ✅ Useful for creating isolated scopes and avoiding global pollution.
+
+---
+
+### 🧠 Pure vs Impure Functions
+
+- **Pure Function**: Same input → same output, no side effects.
+- **Impure Function**: May depend on or modify external state.
+
+```js
+// Pure
+function add(a, b) {
+  return a + b;
+}
+
+// Impure
+let total = 0;
+function addToTotal(x) {
+  total += x;
+}
+```
+
+> ✅ Pure functions are easier to test and debug.
+
+---
+
+### 🧬 Higher-Order Functions
+
+Functions that take other functions as arguments or return them.
+
+```js
+function repeat(fn, times) {
+  for (let i = 0; i < times; i++) {
+    fn();
+  }
+}
+
+repeat(() => console.log("Hello"), 3);
+```
+
+> 🔥 Used in array methods like `.map()`, `.filter()`, `.reduce()`.
+
+## 📘 Chapter: Variable Types in ES6 (`var`, `let`, `const`)
+
+### 🧠 Overview
+
+JavaScript (ES6) introduced `let` and `const` to replace the older `var`.  
+Each has different **scope**, **hoisting behavior**, and **mutability**.
+
+---
+
+### 🔸 `var`
+
+- **Function-scoped**
+- **Hoisted** (but initialized as `undefined`)
+- Can be **redeclared** and **updated**
+
+```js
+function testVar() {
+  console.log(x); // undefined
+  var x = 5;
+  console.log(x); // 5
+}
+```
+
+> ⚠️ Avoid using `var` in modern code—it can cause unexpected bugs due to hoisting and scope leakage.
+
+---
+
+### 🔹 `let`
+
+- **Block-scoped** (`{ }`)
+- **Hoisted**, but not initialized (ReferenceError if accessed before declaration)
+- Can be **updated**, but **not redeclared** in the same scope
+
+```js
+let count = 1;
+count = 2; // ✅ OK
+
+let count = 3; // ❌ SyntaxError (in same scope)
+```
+
+> ✅ Use `let` when the value will change over time (e.g., loop counters, state updates)
+
+---
+
+### 🔸 `const`
+
+- **Block-scoped**
+- Must be **initialized** at declaration
+- Cannot be **reassigned**, but **can mutate** if it's an object or array
+
+```js
+const name = "Ali";
+name = "Reza"; // ❌ TypeError
+
+const user = { age: 20 };
+user.age = 21; // ✅ Allowed (object mutated)
+```
+
+> ✅ Use `const` for values that should never be reassigned—great for constants, config, and function references.
+
+---
+
+### 🧪 Comparison Table
+
+| Feature         | `var`           | `let`           | `const`         |
+|----------------|------------------|------------------|------------------|
+| Scope          | Function          | Block            | Block            |
+| Hoisting       | Yes (undefined)   | Yes (TDZ*)       | Yes (TDZ*)       |
+| Redeclaration  | ✅ Yes            | ❌ No            | ❌ No            |
+| Reassignment   | ✅ Yes            | ✅ Yes           | ❌ No            |
+| Mutation       | ✅ Yes            | ✅ Yes           | ✅ Yes (if object/array) |
+
+> *TDZ = Temporal Dead Zone: accessing before declaration causes error
+
+---
+
+### 🧠 Best Practices
+
+- 🔒 Use `const` by default. Only switch to `let` if you need to reassign.
+- 🚫 Avoid `var` unless you're working in legacy code.
+- 🧼 Keep scopes clean—block scoping with `let`/`const` prevents accidental leaks.
+- 🧠 Use descriptive names for `const` values, especially if they’re config or constants.
+
+---
+# 📘 Chapter: Objects in JavaScript
+
+## 🧠 What Is an Object?
+
+An object is a collection of **key-value pairs**. Keys are called **properties**, and values can be any data type—including functions.
+
+```js
+const user = {
+  name: "Ali",
+  age: 25,
+  isAdmin: true
+};
+```
+
+---
+
+## 🛠️ Creating Objects
+
+### 1. Object Literal
+```js
+const car = {
+  brand: "BMW",
+  year: 2020
+};
+```
+
+### 2. Using `new Object()`
+```js
+const book = new Object();
+book.title = "JS Guide";
+book.pages = 300;
+```
+
+### 3. Using a Constructor Function
+```js
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+}
+
+const p1 = new Person("Ali", 25);
+```
+
+---
+
+## 🔍 Accessing Properties
+
+### Dot Notation
+```js
+console.log(user.name); // "Ali"
+```
+
+### Bracket Notation
+```js
+console.log(user["age"]); // 25
+```
+
+> ✅ Use bracket notation when the key is dynamic or contains special characters.
+
+---
+
+## ✏️ Modifying Objects
+
+```js
+user.age = 26;           // update
+user.city = "Kassel";    // add new property
+delete user.isAdmin;     // remove property
+```
+
+---
+
+## 🧩 Nested Objects
+
+Objects can contain other objects:
+
+```js
+const profile = {
+  name: "Ali",
+  contact: {
+    email: "ali@example.com",
+    phone: "123456789"
+  }
+};
+
+console.log(profile.contact.email); // "ali@example.com"
+```
+
+---
+
+## 🧠 Methods (Functions Inside Objects)
+
+```js
+const calculator = {
+  add: function(a, b) {
+    return a + b;
+  }
+};
+
+calculator.add(2, 3); // 5
+```
+
+Or using shorthand:
+
+```js
+const calculator = {
+  add(a, b) {
+    return a + b;
+  }
+};
+```
+
+---
+
+## 🔁 Looping Through Object Properties
+
+Use `for...in` to iterate over keys:
+
+```js
+for (let key in user) {
+  console.log(key + ": " + user[key]);
+}
+```
+
+---
+
+## 🧠 Built-in Object Methods
+
+- `Object.keys(obj)` → returns array of keys  
+- `Object.values(obj)` → returns array of values  
+- `Object.entries(obj)` → returns array of `[key, value]` pairs  
+- `Object.hasOwnProperty(key)` → checks if key exists
+
+```js
+Object.keys(user); // ["name", "age"]
+```
+
+---
+
+## 🧠 Notes
+
+- Objects are **reference types**—assigning them to another variable copies the reference, not the value.
+- You can use `const` for objects and still modify their properties.
+- Objects are the foundation of JSON, APIs, and most JS frameworks.
+
+```
+---
+```
+# 📘 Advanced JavaScript Object Concepts
+
+## 1️⃣ Property Shorthand
+
+If the variable name and the key are the same, you can use shorthand:
+
+```js
+const name = "Ali";
+const age = 25;
+
+const user = { name, age }; // same as { name: name, age: age }
+```
+
+---
+
+## 2️⃣ Computed Property Names
+
+You can use dynamic keys inside objects:
+
+```js
+const key = "email";
+const user = {
+  name: "Ali",
+  [key]: "ali@example.com"
+};
+```
+
+---
+
+## 3️⃣ Object Destructuring
+
+Extract values from an object easily:
+
+```js
+const user = { name: "Ali", age: 25 };
+const { name, age } = user;
+
+console.log(name); // "Ali"
+```
+
+---
+
+## 4️⃣ Spread Operator in Objects
+
+Clone or merge objects:
+
+```js
+const user = { name: "Ali", age: 25 };
+const updatedUser = { ...user, age: 26, city: "Kassel" };
+```
+
+---
+
+## 5️⃣ Optional Chaining
+
+Avoid errors when accessing nested properties:
+
+```js
+const user = {};
+console.log(user.address?.city); // undefined (no error)
+```
+
+---
+
+## 6️⃣ Object.freeze() vs Object.seal()
+
+- `Object.freeze(obj)` → makes the object completely immutable.
+- `Object.seal(obj)` → allows value changes but prevents adding/removing properties.
+
+```js
+const user = { name: "Ali" };
+Object.freeze(user);
+user.name = "Reza"; // won't change
+```
+
+---
+
+## 7️⃣ Deep vs Shallow Copy
+
+Shallow copy only copies the first level:
+
+```js
+const original = { name: "Ali", contact: { email: "ali@example.com" } };
+const copy = { ...original };
+
+copy.contact.email = "new@example.com";
+console.log(original.contact.email); // "new@example.com"
+```
+
+For deep copy, use `structuredClone()` or JSON methods:
+
+```js
+const deepCopy = structuredClone(original);
+```
+
+---
+
+## 8️⃣ JSON.stringify() and JSON.parse()
+
+Convert objects to strings and back:
+
+```js
+const user = { name: "Ali", age: 25 };
+const str = JSON.stringify(user); // '{"name":"Ali","age":25}'
+const obj = JSON.parse(str);      // { name: "Ali", age: 25 }
+```
+
+---
+
+## 🧠 Bonus Tips
+
+- Objects are reference types—assigning them copies the reference, not the value.
+- You can use `const` with objects and still modify their properties.
+- Most APIs and data formats (like JSON) are based on objects.
+
+```
+---

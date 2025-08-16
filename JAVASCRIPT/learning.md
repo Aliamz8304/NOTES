@@ -949,33 +949,33 @@ Loops in JavaScript allow you to execute a block of code repeatedly, making your
 1. for Loop
 Used when the number of iterations is known.
 
-`javascript
+```javascript
 for (let i = 0; i < 5; i++) {
   console.log("Iteration:", i);
 }
-`
+```
 
 2. while Loop
 Executes as long as the condition is true.
 
-`javascript
+```javascript
 let i = 0;
 while (i < 5) {
   console.log("Iteration:", i);
   i++;
 }
-`
+```
 
 3. do...while Loop
 Executes the block at least once before checking the condition.
 
-`javascript
+```javascript
 let i = 0;
 do {
   console.log("Iteration:", i);
   i++;
 } while (i < 5);
-`
+```
 
 ---
 
@@ -984,22 +984,22 @@ do {
 ✅ break
 Stops the loop immediately.
 
-`javascript
+```javascript
 for (let i = 0; i < 10; i++) {
   if (i === 5) break;
   console.log(i);
 }
-`
+```
 
 🔄 continue
 Skips the current iteration.
 
-`javascript
+```javascript
 for (let i = 0; i < 5; i++) {
   if (i === 2) continue;
   console.log(i);
 }
-`
+```
 
 ---
 
@@ -1007,21 +1007,21 @@ for (let i = 0; i < 5; i++) {
 
 🔁 for...of (Arrays, Strings, etc.)
 
-`javascript
+```javascript
 const fruits = ["apple", "banana", "cherry"];
 for (const fruit of fruits) {
   console.log(fruit);
 }
-`
+```
 
 🔁 for...in (Objects)
 
-`javascript
+```javascript
 const person = { name: "Ali", age: 21 };
 for (const key in person) {
   console.log(${key}: ${person[key]});
 }
-`
+```
 
 ---
 
@@ -1031,23 +1031,23 @@ for (const key in person) {
 
 forEach
 
-`javascript
+```javascript
 [1, 2, 3].forEach(num => console.log(num));
-`
+```
 
 map
 
-`javascript
+```javascript
 const doubled = [1, 2, 3].map(num => num * 2);
 console.log(doubled);
-`
+```
 
 filter
 
-`javascript
+```javascript
 const evens = [1, 2, 3, 4].filter(num => num % 2 === 0);
 console.log(evens);
-`
+```
 
 ---
 

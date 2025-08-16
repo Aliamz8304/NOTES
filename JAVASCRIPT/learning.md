@@ -937,3 +937,139 @@ const obj = JSON.parse(str);      // { name: "Ali", age: 25 }
 - You can use `const` with objects and still modify their properties.
 - Most APIs and data formats (like JSON) are based on objects.
 ---
+🔁 Loops in JavaScript: From Zero to Hero
+
+📘 Introduction
+Loops in JavaScript allow you to execute a block of code repeatedly, making your programs more efficient and dynamic. Whether you're iterating over arrays, objects, or performing repetitive tasks, loops are essential.
+
+---
+
+🌀 Types of Loops in JavaScript
+
+1. for Loop
+Used when the number of iterations is known.
+
+`javascript
+for (let i = 0; i < 5; i++) {
+  console.log("Iteration:", i);
+}
+`
+
+2. while Loop
+Executes as long as the condition is true.
+
+`javascript
+let i = 0;
+while (i < 5) {
+  console.log("Iteration:", i);
+  i++;
+}
+`
+
+3. do...while Loop
+Executes the block at least once before checking the condition.
+
+`javascript
+let i = 0;
+do {
+  console.log("Iteration:", i);
+  i++;
+} while (i < 5);
+`
+
+---
+
+🔍 Loop Control Statements
+
+✅ break
+Stops the loop immediately.
+
+`javascript
+for (let i = 0; i < 10; i++) {
+  if (i === 5) break;
+  console.log(i);
+}
+`
+
+🔄 continue
+Skips the current iteration.
+
+`javascript
+for (let i = 0; i < 5; i++) {
+  if (i === 2) continue;
+  console.log(i);
+}
+`
+
+---
+
+🧩 Looping Over Data Structures
+
+🔁 for...of (Arrays, Strings, etc.)
+
+`javascript
+const fruits = ["apple", "banana", "cherry"];
+for (const fruit of fruits) {
+  console.log(fruit);
+}
+`
+
+🔁 for...in (Objects)
+
+`javascript
+const person = { name: "Ali", age: 21 };
+for (const key in person) {
+  console.log(${key}: ${person[key]});
+}
+`
+
+---
+
+🧠 Advanced Looping
+
+🔄 Array Methods (Functional Loops)
+
+forEach
+
+`javascript
+[1, 2, 3].forEach(num => console.log(num));
+`
+
+map
+
+`javascript
+const doubled = [1, 2, 3].map(num => num * 2);
+console.log(doubled);
+`
+
+filter
+
+`javascript
+const evens = [1, 2, 3, 4].filter(num => num % 2 === 0);
+console.log(evens);
+`
+
+---
+
+⚠️ Common Mistakes
+
+- Forgetting to update loop variables (infinite loop)
+- Using for...in on arrays (can lead to unexpected behavior)
+- Modifying the array while looping over it
+
+---
+
+📚 Summary Table
+
+| Loop Type     | Use Case                         | Executes At Least Once |
+|---------------|----------------------------------|-------------------------|
+| for         | Known number of iterations       | No                      |
+| while       | Unknown number of iterations     | No                      |
+| do...while  | At least one execution required  | Yes                     |
+| for...of    | Iterating over iterable objects  | No                      |
+| for...in    | Iterating over object properties | No                      |
+
+---
+
+🚀 Final Thoughts
+Loops are a core part of JavaScript and mastering them will make you a more powerful developer. Whether you're building dynamic UIs, handling data, or writing algorithms—loops are everywhere.

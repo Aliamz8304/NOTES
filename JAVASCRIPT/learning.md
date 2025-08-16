@@ -1058,18 +1058,100 @@ console.log(evens);
 - Modifying the array while looping over it
 
 ---
+🚀 Final Thoughts
+Loops are a core part of JavaScript and mastering them will make you a more powerful developer. Whether you're building dynamic UIs, handling data, or writing algorithms—loops are everywhere.
+---
+🔁 Advanced JavaScript Loops
 
-📚 Summary Table
-
-| Loop Type     | Use Case                         | Executes At Least Once |
-|---------------|----------------------------------|-------------------------|
-| for         | Known number of iterations       | No                      |
-| while       | Unknown number of iterations     | No                      |
-| do...while  | At least one execution required  | Yes                     |
-| for...of    | Iterating over iterable objects  | No                      |
-| for...in    | Iterating over object properties | No                      |
+This guide covers not only the basic loop types but also advanced techniques and patterns used in real-world JavaScript.
 
 ---
 
-🚀 Final Thoughts
-Loops are a core part of JavaScript and mastering them will make you a more powerful developer. Whether you're building dynamic UIs, handling data, or writing algorithms—loops are everywhere.
+1. 🔄 Nested Loops
+
+A loop inside another loop.
+
+```javascript
+for (let i = 0; i < 3; i++) {
+  for (let j = 0; j < 2; j++) {
+    console.log(i = ${i}, j = ${j});
+  }
+}
+```
+
+---
+
+2. 🧹 Infinite Loops
+
+Loops that never end unless manually broken.
+
+```javascript
+while (true) {
+  console.log("This will run forever!");
+  // Use break to stop it
+}
+```
+
+> ⚠️ Be careful—this can crash your browser or app!
+
+---
+
+3. 🧪 Looping with .forEach()
+
+A method for iterating over arrays.
+
+```javascript
+const numbers = [1, 2, 3];
+numbers.forEach((num, index) => {
+  console.log(Index ${index}: ${num});
+});
+```
+
+---
+
+4. 🧵 Looping with .map(), .filter(), .reduce()
+
+These aren't traditional loops, but they’re powerful for transforming arrays.
+
+```javascript
+const doubled = [1, 2, 3].map(n => n * 2); // [2, 4, 6]
+const evens = [1, 2, 3, 4].filter(n => n % 2 === 0); // [2, 4]
+const sum = [1, 2, 3].reduce((acc, val) => acc + val, 0); // 6
+```
+
+---
+
+5. 🛑 Labeled Loops
+
+Used to break out of nested loops more precisely.
+
+```javascript
+outerLoop:
+for (let i = 0; i < 3; i++) {
+  for (let j = 0; j < 3; j++) {
+    if (i === 1 && j === 1) break outerLoop;
+    console.log(i = ${i}, j = ${j});
+  }
+}
+```
+
+---
+
+✅ Summary
+
+| Loop Type       | Use Case                        |
+|----------------|----------------------------------|
+| for          | Known number of iterations       |
+| while        | Unknown condition-based loop     |
+| do...while   | At least one guaranteed run      |
+| for...of     | Iterating over arrays/iterables  |
+| for...in     | Iterating over object keys       |
+| .forEach()   | Array iteration with callback    |
+| .map()       | Transforming array elements      |
+| .filter()    | Filtering array elements         |
+| .reduce()    | Aggregating array values         |
+| Labeled Loops  | Breaking out of nested loops     |
+
+---
+
+`

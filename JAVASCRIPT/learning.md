@@ -1153,5 +1153,512 @@ for (let i = 0; i < 3; i++) {
 | Labeled Loops  | Breaking out of nested loops     |
 
 ---
+## 📚 Understanding DOM and BOM in JavaScript
 
-`
+### 🧩 What is the DOM?
+
+**DOM** stands for **Document Object Model**. It is a programming interface for HTML and XML documents. When a web page is loaded, the browser creates a DOM of the page, which represents the structure of the document as a tree of objects.
+
+#### 🔍 Key Concepts:
+- The DOM allows JavaScript to **access**, **modify**, and **interact** with HTML elements.
+- It treats every element (like `<div>`, `<p>`, `<img>`) as an **object**.
+- You can **add**, **remove**, or **change** elements dynamically.
+
+#### 🧪 Example:
+```javascript
+// Access an element by ID
+const heading = document.getElementById("main-title");
+
+// Change its text
+heading.textContent = "Welcome to JavaScript DOM!";
+```
+
+#### 🛠️ Common DOM Methods:
+| Method | Description |
+|--------|-------------|
+| `getElementById()` | Selects an element by its ID |
+| `getElementsByClassName()` | Selects elements by class name |
+| `querySelector()` | Selects the first matching element |
+| `createElement()` | Creates a new HTML element |
+| `appendChild()` | Adds a child element to a parent |
+
+---
+
+### 🌐 What is the BOM?
+
+**BOM** stands for **Browser Object Model**. It represents the components provided by the browser outside of the HTML document itself. This includes things like the browser window, history, location, and navigator.
+
+#### 🔍 Key Concepts:
+- BOM allows JavaScript to interact with the **browser environment**.
+- It includes objects like `window`, `navigator`, `location`, and `history`.
+
+#### 🧪 Example:
+```javascript
+// Show an alert box
+window.alert("Hello from BOM!");
+
+// Redirect to another page
+window.location.href = "https://example.com";
+```
+
+#### 🛠️ Common BOM Objects:
+| Object | Description |
+|--------|-------------|
+| `window` | Represents the browser window |
+| `navigator` | Provides information about the browser |
+| `location` | Contains URL info of the current page |
+| `history` | Allows navigation through browser history |
+---
+### ⚔️ DOM vs BOM: What's the Difference?
+
+| Feature | DOM | BOM |
+|--------|-----|-----|
+| Purpose | Interacts with the **document** | Interacts with the **browser** |
+| Examples | `document.getElementById()` | `window.alert()` |
+| Scope | HTML/XML content | Browser-level features |
+---
+
+### 🧠 Summary
+
+- DOM is all about **manipulating the page content**.
+- BOM is all about **interacting with the browser itself**.
+- Both are essential for building dynamic and interactive web applications.
+---
+## 🔍 Accessing Elements in the DOM
+
+In JavaScript, accessing elements in the DOM is the first step to manipulating them—whether you're changing text, styles, or adding interactivity.
+
+### 🧭 1. Access by ID
+
+Use `getElementById()` to select a single element with a specific `id`.
+
+```html
+<h1 id="title">Hello World</h1>
+```
+
+```javascript
+const title = document.getElementById("title");
+title.textContent = "Hello DOM!";
+```
+
+### 🧭 2. Access by Class Name
+
+Use `getElementsByClassName()` to select all elements with a specific class. Returns an **HTMLCollection**.
+
+```html
+<p class="note">Note 1</p>
+<p class="note">Note 2</p>
+```
+
+```javascript
+const notes = document.getElementsByClassName("note");
+notes[0].style.color = "blue";
+```
+
+### 🧭 3. Access by Tag Name
+
+Use `getElementsByTagName()` to select all elements with a specific tag.
+
+```html
+<ul>
+  <li>Item 1</li>
+  <li>Item 2</li>
+</ul>
+```
+
+```javascript
+const listItems = document.getElementsByTagName("li");
+console.log(listItems.length); // 2
+```
+
+### 🧭 4. Access with `querySelector()`
+
+Use `querySelector()` to select the **first** element that matches a CSS selector.
+
+```html
+<div class="card">Card 1</div>
+<div class="card">Card 2</div>
+```
+
+```javascript
+const firstCard = document.querySelector(".card");
+firstCard.style.border = "1px solid black";
+```
+
+### 🧭 5. Access with `querySelectorAll()`
+
+Use `querySelectorAll()` to select **all** elements that match a CSS selector. Returns a **NodeList**.
+
+```javascript
+const allCards = document.querySelectorAll(".card");
+allCards.forEach(card => {
+  card.style.backgroundColor = "lightgray";
+});
+```
+
+---
+
+### 🧠 Tips & Notes
+
+- `getElementById()` returns a single element.
+- `getElementsByClassName()` and `getElementsByTagName()` return **live collections**.
+- `querySelectorAll()` returns a **static NodeList**, which supports `forEach()`.
+- You can combine selectors for more precision:  
+  ```javascript
+  document.querySelector("div.card.highlighted");
+  ```
+
+---
+
+### 🧪 Practice Challenge
+
+Try this in your browser console:
+
+```html
+<input type="text" id="username" placeholder="Enter your name">
+<button onclick="greetUser()">Greet</button>
+<p id="greeting"></p>
+```
+
+```javascript
+function greetUser() {
+  const name = document.getElementById("username").value;
+  document.getElementById("greeting").textContent = `Hello, ${name}!`;
+}
+```
+---
+## 🎯 Accessing and Modifying Classes in the DOM
+
+Every HTML element has a `classList` property that gives you powerful tools to read, add, remove, and toggle CSS classes.
+
+### 📌 1. Accessing Class List
+
+```html
+<div id="box" class="red square"></div>
+```
+
+```javascript
+const box = document.getElementById("box");
+console.log(box.classList); // DOMTokenList ['red', 'square']
+```
+
+---
+
+### ✏️ 2. Adding a Class
+
+```javascript
+box.classList.add("shadow");
+```
+
+✅ Result: `<div class="red square shadow"></div>`
+
+---
+
+### 🧹 3. Removing a Class
+
+```javascript
+box.classList.remove("red");
+```
+
+✅ Result: `<div class="square shadow"></div>`
+
+---
+
+### 🔁 4. Toggling a Class
+
+This adds the class if it’s not present, and removes it if it is.
+
+```javascript
+box.classList.toggle("active");
+```
+
+✅ Useful for things like dropdowns, modals, tabs, etc.
+
+---
+
+### ❓ 5. Checking if a Class Exists
+
+```javascript
+if (box.classList.contains("square")) {
+  console.log("It's a square!");
+}
+```
+
+---
+
+### 🧠 Bonus: Multiple Classes
+
+You can add or remove multiple classes at once:
+
+```javascript
+box.classList.add("visible", "rounded");
+box.classList.remove("shadow", "red");
+```
+
+---
+
+### 🧪 Practice Challenge
+
+```html
+<button onclick="toggleTheme()">Toggle Theme</button>
+<div id="page" class="light"></div>
+```
+
+```javascript
+function toggleTheme() {
+  const page = document.getElementById("page");
+  page.classList.toggle("dark");
+}
+```
+✅ This switches between `.light` and `.dark` themes.
+---
+
+## 🛠 Accessing and Modifying DOM Attributes
+
+In JavaScript, you can interact with HTML attributes using methods like `getAttribute()`, `setAttribute()`, and `removeAttribute()`. These are essential for controlling things like `src`, `href`, `alt`, `disabled`, `checked`, and more.
+
+---
+
+### 🔍 1. `getAttribute()`
+
+Use this to read the value of an attribute.
+
+```html
+<img id="logo" src="logo.png" alt="Company Logo">
+```
+
+```javascript
+const logo = document.getElementById("logo");
+const altText = logo.getAttribute("alt");
+console.log(altText); // "Company Logo"
+```
+
+---
+
+### ✏️ 2. `setAttribute()`
+
+Use this to set or update an attribute.
+
+```javascript
+logo.setAttribute("src", "new-logo.png");
+logo.setAttribute("alt", "New Logo");
+```
+
+✅ The image source and alt text are now updated.
+
+---
+
+### 🧹 3. `removeAttribute()`
+
+Use this to remove an attribute from an element.
+
+```javascript
+logo.removeAttribute("alt");
+```
+
+✅ The alt text is now gone.
+
+---
+
+### ⚙️ 4. Boolean Attributes (`disabled`, `checked`, `readonly`, etc.)
+
+You can use both `setAttribute()` and direct property access:
+
+```html
+<input type="checkbox" id="agree">
+```
+
+```javascript
+const checkbox = document.getElementById("agree");
+
+// Enable
+checkbox.setAttribute("checked", true);
+// or
+checkbox.checked = true;
+
+// Disable
+checkbox.removeAttribute("checked");
+// or
+checkbox.checked = false;
+```
+
+---
+
+### 🧠 Pro Tips
+
+- `getAttribute()` returns the original HTML value, not the current DOM state.
+- For attributes like `value`, `checked`, or `selected`, it's better to use direct properties:
+
+  ```javascript
+  input.value = "Ali";
+  checkbox.checked = true;
+  ```
+
+- You can also access custom attributes like `data-*`:
+
+  ```html
+  <div id="card" data-user-id="42"></div>
+  ```
+
+  ```javascript
+  const card = document.getElementById("card");
+  const userId = card.getAttribute("data-user-id"); // "42"
+  ```
+
+---
+
+### 🧪 Practice Challenge
+
+```html
+<a id="link" href="https://example.com" target="_blank">Visit Site</a>
+<button onclick="changeLink()">Change Link</button>
+```
+
+```javascript
+function changeLink() {
+  const link = document.getElementById("link");
+  link.setAttribute("href", "https://copilot.microsoft.com");
+  link.textContent = "Go to Copilot";
+}
+```
+---
+## ➕ Adding Elements to the DOM with JavaScript
+
+To dynamically add an element to a webpage, you typically follow these steps:
+
+1. Create the element using `document.createElement()`
+2. Set its content or attributes
+3. Append it to a parent element using `appendChild()` or `append()`
+
+---
+
+### 🧱 1. Create a New Element
+
+```javascript
+const newDiv = document.createElement("div");
+```
+
+---
+
+### 🎨 2. Set Content and Attributes
+
+```javascript
+newDiv.textContent = "Hello Ali!";
+newDiv.className = "greeting";
+newDiv.setAttribute("id", "welcome-box");
+```
+
+---
+
+### 📌 3. Add to the DOM
+
+Let’s say you want to insert this `div` inside an element with the ID `container`:
+
+```html
+<div id="container"></div>
+```
+
+```javascript
+const container = document.getElementById("container");
+container.appendChild(newDiv);
+```
+
+✅ Now the new `div` is inside the container.
+
+---
+
+### 🧠 Difference Between `appendChild()` and `append()`
+
+| Method         | Description |
+|----------------|-------------|
+| `appendChild()` | Accepts only one Node (like an HTML element or text node) |
+| `append()`      | Can accept multiple Nodes or even plain text |
+
+Example using `append()`:
+
+```javascript
+container.append("Simple text", newDiv);
+```
+
+---
+
+### 🧪 Full Example
+
+```html
+<ul id="list"></ul>
+<button onclick="addItem()">Add Item</button>
+```
+
+```javascript
+function addItem() {
+  const li = document.createElement("li");
+  li.textContent = "New item";
+  document.getElementById("list").appendChild(li);
+}
+```
+---
+## 🎨 Accessing and Modifying Inline CSS in the DOM
+
+JavaScript gives you full control over an element’s inline styles using the `.style` property. This only affects styles written directly in the `style` attribute of an element—not styles from external stylesheets or `<style>` tags.
+
+---
+
+### 🔍 1. Accessing Inline Styles
+
+```html
+<div id="box" style="color: blue; background-color: yellow;"></div>
+```
+
+```javascript
+const box = document.getElementById("box");
+console.log(box.style.color); // "blue"
+console.log(box.style.backgroundColor); // "yellow"
+```
+
+---
+
+### ✏️ 2. Modifying Inline Styles
+
+You can change styles like this:
+
+```javascript
+box.style.color = "red";
+box.style.border = "2px solid black";
+box.style.padding = "10px";
+```
+
+✅ These changes are applied immediately to the element.
+
+---
+
+### ⚠️ Important Notes
+
+- **Style properties use camelCase** in JavaScript:
+  - `background-color` → `backgroundColor`
+  - `font-size` → `fontSize`
+  - `text-align` → `textAlign`
+
+- **Only inline styles** are accessible via `.style`. To get computed styles (including those from CSS files), use:
+
+  ```javascript
+  const computed = window.getComputedStyle(box);
+  console.log(computed.margin); // returns actual margin value
+  ```
+
+---
+
+### 🧪 Example
+
+```html
+<button onclick="highlight()">Highlight Box</button>
+<div id="box" style="width: 100px; height: 100px;"></div>
+```
+
+```javascript
+function highlight() {
+  const box = document.getElementById("box");
+  box.style.backgroundColor = "orange";
+  box.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
+}
+```
+---

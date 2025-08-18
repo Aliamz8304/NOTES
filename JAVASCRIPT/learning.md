@@ -1662,3 +1662,205 @@ function highlight() {
 }
 ```
 ---
+
+## 🧠 Part 1: JavaScript Events — From Basics to Advanced
+
+### 🔹 What is an Event?
+
+An **event** is a signal that something has happened in the browser. It could be:
+- A user action (click, scroll, keypress)
+- A system event (page load, network error)
+- A change in an element (input value, focus)
+
+JavaScript lets you **listen** for these events and **respond** with custom behavior.
+
+---
+
+### 🔹 Event Flow: Bubbling vs Capturing
+
+Events travel through the DOM in two phases:
+
+| Phase        | Description |
+|--------------|-------------|
+| **Capturing** | From `window` down to the target element |
+| **Bubbling**  | From the target element back up to `window` |
+
+By default, most events bubble. You can choose which phase to listen in using `addEventListener`.
+
+```javascript
+element.addEventListener('click', handler, true); // Capturing
+element.addEventListener('click', handler, false); // Bubbling (default)
+```
+
+---
+
+### 🔹 The `event` Object
+
+Every event handler receives an `event` object with tons of useful info:
+
+```javascript
+element.addEventListener('click', function (e) {
+  console.log(e.type);       // "click"
+  console.log(e.target);     // The clicked element
+  console.log(e.clientX);    // Mouse X position
+});
+```
+
+Common properties:
+- `type`: event type (`click`, `keydown`, etc.)
+- `target`: the element that triggered the event
+- `currentTarget`: the element the listener is attached to
+- `preventDefault()`: stops default behavior (e.g., form submission)
+- `stopPropagation()`: stops bubbling
+
+---
+
+### 🔹 Preventing Default Behavior
+
+```javascript
+document.querySelector('form').addEventListener('submit', function (e) {
+  e.preventDefault(); // Stops the form from submitting
+  console.log('Form intercepted!');
+});
+```
+
+---
+
+### 🔹 Event Delegation (Advanced)
+
+Instead of adding listeners to every child element, you add one to the parent and use `event.target` to detect which child triggered it.
+
+```javascript
+document.querySelector('#list').addEventListener('click', function (e) {
+  if (e.target.tagName === 'LI') {
+    console.log('Clicked:', e.target.textContent);
+  }
+});
+```
+
+✅ Efficient for dynamic content  
+✅ Reduces memory usage
+
+---
+
+## ⚡ Part 2: `addEventListener` — From Basics to Mastery
+
+### 🔹 Syntax
+
+```javascript
+element.addEventListener(eventType, handlerFunction, options);
+```
+
+- `eventType`: e.g. `'click'`, `'keydown'`
+- `handlerFunction`: the function to run
+- `options`: optional object or boolean
+
+---
+
+### 🔹 Removing an Event Listener
+
+You need a **named function** to remove it:
+
+```javascript
+function handleClick() {
+  console.log('Clicked!');
+}
+
+btn.addEventListener('click', handleClick);
+btn.removeEventListener('click', handleClick);
+```
+
+---
+
+### 🔹 Options Object (Advanced)
+
+```javascript
+element.addEventListener('click', handler, {
+  once: true,         // Runs only once
+  capture: false,     // Bubbling phase
+  passive: true       // Improves scroll performance
+});
+```
+
+---
+
+### 🔹 Multiple Listeners
+
+You can attach multiple listeners to the same element and event:
+
+```javascript
+btn.addEventListener('click', () => console.log('First'));
+btn.addEventListener('click', () => console.log('Second'));
+```
+
+---
+
+### 🔹 Custom Events
+
+You can create and dispatch your own events:
+
+```javascript
+const myEvent = new CustomEvent('aliEvent', {
+  detail: { message: 'Hello from Ali!' }
+});
+
+element.addEventListener('aliEvent', function (e) {
+  console.log(e.detail.message);
+});
+
+element.dispatchEvent(myEvent);
+```
+
+---
+
+### 🔹 Keyboard Events
+
+```javascript
+document.addEventListener('keydown', function (e) {
+  console.log(`Key pressed: ${e.key}`);
+  if (e.key === 'Enter') {
+    console.log('Enter was pressed!');
+  }
+});
+```
+
+---
+
+### 🔹 Mouse Events
+
+| Event        | Description |
+|--------------|-------------|
+| `click`      | Left click |
+| `dblclick`   | Double click |
+| `contextmenu`| Right click |
+| `mousedown`  | Button pressed |
+| `mouseup`    | Button released |
+| `mousemove`  | Mouse moved |
+| `mouseenter` | Mouse enters element |
+| `mouseleave` | Mouse leaves element |
+
+---
+
+### 🔹 Touch Events (Mobile)
+
+```javascript
+element.addEventListener('touchstart', () => console.log('Touch started'));
+element.addEventListener('touchend', () => console.log('Touch ended'));
+```
+
+---
+
+## 🧪 Final Pro Tip: Event Utilities
+
+You can build reusable utilities:
+
+```javascript
+function on(el, event, handler, options = {}) {
+  el.addEventListener(event, handler, options);
+}
+
+function off(el, event, handler) {
+  el.removeEventListener(event, handler);
+}
+```
+---

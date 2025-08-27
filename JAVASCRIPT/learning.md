@@ -2998,28 +2998,28 @@ Web browsers offer several ways to store data locally on the user's device. This
 
 🔹 Set Item
 
-`javascript
+```javascript
 localStorage.setItem("username", "Ali");
-`
+```
 
 🔹 Get Item
 
-`javascript
+```javascript
 const name = localStorage.getItem("username");
 console.log(name); // "Ali"
-`
+```
 
 🔹 Remove Item
 
-`javascript
+```javascript
 localStorage.removeItem("username");
-`
+```
 
 🔹 Clear All
 
-`javascript
+```javascript
 localStorage.clear();
-`
+```
 
 ✅ Great for saving user settings, themes, or cached API data.
 
@@ -3029,10 +3029,10 @@ localStorage.clear();
 
 Works just like localStorage, but data is cleared when the tab or window is closed.
 
-`javascript
+```javascript
 sessionStorage.setItem("tempData", "123");
 const temp = sessionStorage.getItem("tempData");
-`
+```
 
 ✅ Ideal for temporary data like form progress or tab-specific state.
 
@@ -3042,15 +3042,15 @@ const temp = sessionStorage.getItem("tempData");
 
 Cookies are older and mostly used for authentication or tracking.
 
-`javascript
+```javascript
 document.cookie = "token=abc123; expires=Fri, 31 Dec 2025 23:59:59 GMT";
-`
+```
 
 To read cookies:
 
-`javascript
+```javascript
 console.log(document.cookie);
-`
+```
 
 ✅ Automatically sent with HTTP requests, but limited in size and flexibility.
 
@@ -3060,14 +3060,14 @@ console.log(document.cookie);
 
 IndexedDB is a low-level API for storing large amounts of structured data.
 
-`javascript
+```javascript
 const request = indexedDB.open("MyDatabase", 1);
 
 request.onsuccess = function () {
   const db = request.result;
   console.log("Database opened:", db);
 };
-`
+```
 
 ✅ Useful for offline apps, storing files, or syncing large datasets.
 

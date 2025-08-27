@@ -2977,4 +2977,108 @@ async function getJSON(url) {
 ```
 
 ---
+🗄️ Browser Storage – How to Store Data on the Client Side
+
+Web browsers offer several ways to store data locally on the user's device. This is useful for saving user preferences, caching data, or building offline-friendly apps.
+
+---
+
+🔍 Types of Browser Storage
+
+| Storage Type       | Description                                      | Capacity     | Expiration     |
+|--------------------|--------------------------------------------------|--------------|----------------|
+| Local Storage  | Stores key-value pairs persistently              | ~5–10MB      | Never (until cleared) |
+| Session Storage| Stores key-value pairs for one browser session   | ~5MB         | Cleared on tab close |
+| Cookies        | Small data sent with every HTTP request          | ~4KB         | Set manually (can expire) |
+| IndexedDB      | Advanced, structured storage for large data      | Hundreds of MB | Persistent     |
+
+---
+
+📦 Local Storage
+
+🔹 Set Item
+
+`javascript
+localStorage.setItem("username", "Ali");
+`
+
+🔹 Get Item
+
+`javascript
+const name = localStorage.getItem("username");
+console.log(name); // "Ali"
+`
+
+🔹 Remove Item
+
+`javascript
+localStorage.removeItem("username");
+`
+
+🔹 Clear All
+
+`javascript
+localStorage.clear();
+`
+
+✅ Great for saving user settings, themes, or cached API data.
+
+---
+
+🕒 Session Storage
+
+Works just like localStorage, but data is cleared when the tab or window is closed.
+
+`javascript
+sessionStorage.setItem("tempData", "123");
+const temp = sessionStorage.getItem("tempData");
+`
+
+✅ Ideal for temporary data like form progress or tab-specific state.
+
+---
+
+🍪 Cookies
+
+Cookies are older and mostly used for authentication or tracking.
+
+`javascript
+document.cookie = "token=abc123; expires=Fri, 31 Dec 2025 23:59:59 GMT";
+`
+
+To read cookies:
+
+`javascript
+console.log(document.cookie);
+`
+
+✅ Automatically sent with HTTP requests, but limited in size and flexibility.
+
+---
+
+🧠 IndexedDB (Advanced)
+
+IndexedDB is a low-level API for storing large amounts of structured data.
+
+`javascript
+const request = indexedDB.open("MyDatabase", 1);
+
+request.onsuccess = function () {
+  const db = request.result;
+  console.log("Database opened:", db);
+};
+`
+
+✅ Useful for offline apps, storing files, or syncing large datasets.
+
+---
+
+🔐 Security Notes
+
+- Data stored in browser storage is not encrypted by default.
+- Never store sensitive data like passwords or tokens in localStorage.
+- Use HTTPS to protect data in transit.
+
+---
+
 

@@ -3220,7 +3220,7 @@ Opening the database and handling upgrades
 
 Use indexedDB.open(name, version). Define your schema (or migrations) inside onupgradeneeded.
 
-`javascript
+```javascript
 const DB_NAME = "AliContactsDB";
 const DB_VERSION = 1; // bump this to trigger migrations
 
@@ -3251,7 +3251,7 @@ function openDB() {
     request.onerror = () => reject(request.error);
   });
 }
-`
+```
 
 - Upgrade safety: Schema changes are only allowed during onupgradeneeded.
 - Blocked events: If old tabs keep the DB open, upgrades can be blocked; close other tabs to proceed.
@@ -3264,7 +3264,7 @@ Use a readwrite transaction. Use add() for “insert only” and put() for “up
 
 Add a single contact
 
-`javascript
+```javascript
 async function addContact(contact) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -3285,11 +3285,11 @@ addContact({
   phone: "+98 912 000 0000",
   tags: ["friend", "dev"]
 }).then((id) => console.log("Inserted contact id:", id));
-`
+```
 
 Add multiple contacts in one transaction
 
-`javascript
+```javascript
 async function addMany(contacts) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -3302,11 +3302,11 @@ async function addMany(contacts) {
     tx.onabort = tx.onerror = () => reject(tx.error || new Error("Transaction aborted"));
   });
 }
-`
+```
 
 Upsert (insert or update) with put()
 
-`javascript
+```javascript
 async function upsertContact(contact) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -3318,7 +3318,7 @@ async function upsertContact(contact) {
     req.onerror = () => reject(req.error);
   });
 }
-`
+```
 
 ---
 
@@ -3326,7 +3326,7 @@ Retrieving data (by key, index, ranges, cursors)
 
 Get by primary key
 
-`javascript
+```javascript
 async function getContact(id) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -3338,11 +3338,11 @@ async function getContact(id) {
     req.onerror = () => reject(req.error);
   });
 }
-`
+```
 
 Get all records (careful with huge stores)
 
-`javascript
+```javascript
 async function getAllContacts() {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -3354,11 +3354,11 @@ async function getAllContacts() {
     req.onerror = () => reject(req.error);
   });
 }
-`
+```
 
 Query by index (exact match)
 
-`javascript
+```javascript
 async function getByEmail(email) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -3371,13 +3371,13 @@ async function getByEmail(email) {
     req.onerror = () => reject(req.error);
   });
 }
-`
+```
 
 Query by index with ranges
 
 Use IDBKeyRange for ranges and filtering.
 
-`javascript
+```javascript
 async function getByLastNameRange(startInclusive, endExclusive) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -3400,11 +3400,11 @@ async function getByLastNameRange(startInclusive, endExclusive) {
     req.onerror = () => reject(req.error);
   });
 }
-`
+```
 
 Query multiEntry index (array fields)
 
-`javascript
+```javascript
 async function getByTag(tag) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -3427,13 +3427,13 @@ async function getByTag(tag) {
     req.onerror = () => reject(req.error);
   });
 }
-`
+```
 
 Cursors and pagination
 
 Cursors let you stream results without loading everything at once.
 
-`javascript
+```javascript
 async function getPageByLastName(pageSize, pageNumber) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -3462,7 +3462,7 @@ async function getPageByLastName(pageSize, pageNumber) {
     req.onerror = () => reject(req.error);
   });
 }
-`
+```
 
 ---
 
@@ -3470,7 +3470,7 @@ Deleting data (record, store, database)
 
 Delete a single record by key
 
-`javascript
+```javascript
 async function deleteContact(id) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -3482,11 +3482,11 @@ async function deleteContact(id) {
     req.onerror = () => reject(req.error);
   });
 }
-`
+```
 
 Clear an entire object store
 
-`javascript
+```javascript
 async function clearContacts() {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -3497,11 +3497,11 @@ async function clearContacts() {
     tx.onabort = tx.onerror = () => reject(tx.error || new Error("Clear failed"));
   });
 }
-`
+```
 
 Delete the whole database
 
-`javascript
+```javascript
 function deleteDatabase() {
   return new Promise((resolve, reject) => {
     const req = indexedDB.deleteDatabase(DB_NAME);
@@ -3512,7 +3512,7 @@ function deleteDatabase() {
     };
   });
 }
-`
+```
 
 ---
 
@@ -3528,7 +3528,7 @@ Transactions and error handling
 
 Pattern: wrap requests in Promises
 
-`javascript
+```javascript
 function promisifyRequest(req) {
   return new Promise((resolve, reject) => {
     req.onsuccess = () => resolve(req.result);
@@ -3542,7 +3542,7 @@ async function exampleWrappedGet(id) {
   const store = tx.objectStore("contacts");
   return await promisifyRequest(store.get(id));
 }
-`
+```
 
 ---
 
@@ -3561,7 +3561,7 @@ Practical tips and best practices
 
 Minimal end-to-end example (create, add, read, delete)
 
-`javascript
+```javascript
 (async function demo() {
   // 1) Ensure DB and schema exist
   const db = await openDB();
@@ -3584,6 +3584,6 @@ Minimal end-to-end example (create, add, read, delete)
   await deleteContact(id);
   console.log("Deleted:", id);
 })();
-`
+```
 
 ---

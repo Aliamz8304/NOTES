@@ -3585,5 +3585,150 @@ Minimal end-to-end example (create, add, read, delete)
   console.log("Deleted:", id);
 })();
 ```
+---
+# 🌐 BOM: Pop-up Boxes, Location, and History
+
+The **Browser Object Model (BOM)** allows JavaScript to interact with the browser itself—things like opening new windows, navigating URLs, and controlling browser history.
+
+---
+
+## 🧨 Pop-up Boxes in JavaScript
+
+JavaScript provides three built-in dialog boxes:
+
+### 1. **`alert()` – Show a message**
+
+```javascript
+alert("Welcome to Ali's site!");
+```
+
+✅ Displays a simple message. The user must click “OK” to continue.
+
+---
+
+### 2. **`confirm()` – Ask for confirmation**
+
+```javascript
+const result = confirm("Do you want to delete this item?");
+if (result) {
+  console.log("User confirmed");
+} else {
+  console.log("User canceled");
+}
+```
+
+✅ Returns `true` if the user clicks “OK”, `false` if “Cancel”.
+
+---
+
+### 3. **`prompt()` – Ask for input**
+
+```javascript
+const name = prompt("What's your name?");
+console.log("Hello,", name);
+```
+
+✅ Returns the user’s input as a string, or `null` if canceled.
+
+---
+
+## 📍 `window.location` – Working with URLs
+
+The `location` object gives access to the current URL and lets you navigate or reload the page.
+
+### 🔹 Read current URL
+
+```javascript
+console.log(window.location.href); // Full URL
+console.log(window.location.hostname); // Domain
+console.log(window.location.pathname); // Path
+console.log(window.location.search); // Query string
+```
+
+---
+
+### 🔹 Redirect to another page
+
+```javascript
+window.location.href = "https://example.com";
+```
+
+✅ Navigates to a new URL.
+
+---
+
+### 🔹 Reload the page
+
+```javascript
+window.location.reload(); // Reloads the current page
+```
+
+---
+
+### 🔹 Assign vs Replace
+
+```javascript
+window.location.assign("https://example.com"); // Adds to history
+window.location.replace("https://example.com"); // Replaces current entry
+```
+
+✅ `replace()` doesn’t allow the user to go “Back”.
+
+---
+
+## 🕹️ `window.history` – Navigating Browser History
+
+The `history` object lets you move through the browser’s session history.
+
+### 🔹 Go back or forward
+
+```javascript
+history.back();    // Equivalent to clicking "Back"
+history.forward(); // Equivalent to clicking "Forward"
+```
+
+---
+
+### 🔹 Go to specific position
+
+```javascript
+history.go(-2); // Go back 2 pages
+history.go(1);  // Go forward 1 page
+```
+
+---
+
+### 🔹 Manipulate history with `pushState()`
+
+```javascript
+history.pushState({ page: 1 }, "Title", "?page=1");
+```
+
+✅ Adds a new entry to the history stack without reloading the page.
+
+---
+
+### 🔹 Listen for history changes
+
+```javascript
+window.onpopstate = function (event) {
+  console.log("Location changed:", document.location);
+  console.log("State object:", event.state);
+};
+```
+
+✅ Useful for single-page apps (SPA) to handle navigation manually.
+
+---
+
+## 🧠 Summary
+
+| Feature       | Purpose                          | Example                        |
+|---------------|----------------------------------|--------------------------------|
+| `alert()`     | Show message                     | `alert("Hi!")`                 |
+| `confirm()`   | Ask yes/no                       | `confirm("Delete?")`           |
+| `prompt()`    | Ask for input                    | `prompt("Your name?")`         |
+| `location`    | Read or change URL               | `location.href = "..."`        |
+| `history`     | Navigate or manipulate history   | `history.pushState(...)`       |
 
 ---

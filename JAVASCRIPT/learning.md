@@ -3182,4 +3182,408 @@ const word = "Ali";
 const letters = [...word]; // ['A', 'l', 'i']
 ```
 ---
+IndexedDB: introduction, schema, add, read, and delete
 
+IndexedDB is the browser’s built-in NoSQL database for storing large amounts of structured data on the client. It’s transactional, asynchronous, and works offline. Unlike Local Storage, it supports indexes, queries, and binary data (Blobs).
+
+---
+
+Core concepts and terminology
+
+- Database: A named storage area versioned with integers. Upgrades happen when you open it with a higher version.
+- Object store: Like a table, stores records as JavaScript objects.
+- Key: Unique identifier for a record. Comes from a keyPath (a property in the object), auto-incremented keys, or supplied manually.
+- Index: A secondary lookup path built on a property (or array of properties) of the stored objects; can be unique or multiEntry.
+- Transaction: A scoped, atomic operation across one or more stores. Mode is either readonly or readwrite.
+- Request: Every operation returns a request that fires onsuccess or onerror.
+- Versionchange: Special upgrade flow where you define or migrate schema.
+
+---
+
+Designing the schema
+
+We’ll build a practical schema for a “contacts” app.
+
+- Object store:
+  - Name: contacts
+  - Options: { keyPath: "id", autoIncrement: true }
+- Indexes:
+  - email (unique) for quick exact lookups
+  - lastName (non-unique) for sorting/filtering
+  - tags (multiEntry) to query by labels (e.g., ["friend", "work"])
+
+> Multi-entry indexes let an array field produce multiple index entries per record.
+
+---
+
+Opening the database and handling upgrades
+
+Use indexedDB.open(name, version). Define your schema (or migrations) inside onupgradeneeded.
+
+`javascript
+const DB_NAME = "AliContactsDB";
+const DB_VERSION = 1; // bump this to trigger migrations
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DBNAME, DBVERSION);
+
+    request.onupgradeneeded = (event) => {
+      const db = request.result;
+
+      // Create store if it doesn't exist
+      if (!db.objectStoreNames.contains("contacts")) {
+        const store = db.createObjectStore("contacts", {
+          keyPath: "id",
+          autoIncrement: true
+        });
+
+        store.createIndex("email", "email", { unique: true });
+        store.createIndex("lastName", "lastName", { unique: false });
+        store.createIndex("tags", "tags", { multiEntry: true });
+      }
+
+      // Example migration pattern for future versions:
+      // if (event.oldVersion < 2) { / add new store/index / }
+    };
+
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+`
+
+- Upgrade safety: Schema changes are only allowed during onupgradeneeded.
+- Blocked events: If old tabs keep the DB open, upgrades can be blocked; close other tabs to proceed.
+
+---
+
+Adding data (create and upsert)
+
+Use a readwrite transaction. Use add() for “insert only” and put() for “upsert” (insert or update).
+
+Add a single contact
+
+`javascript
+async function addContact(contact) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("contacts", "readwrite");
+    const store = tx.objectStore("contacts");
+    const req = store.add(contact); // use put(contact) to upsert
+
+    req.onsuccess = () => resolve(req.result); // returns generated key when autoIncrement
+    req.onerror = () => reject(req.error);
+  });
+}
+
+// Usage:
+addContact({
+  firstName: "Ali",
+  lastName: "Rahimi",
+  email: "ali@example.com",
+  phone: "+98 912 000 0000",
+  tags: ["friend", "dev"]
+}).then((id) => console.log("Inserted contact id:", id));
+`
+
+Add multiple contacts in one transaction
+
+`javascript
+async function addMany(contacts) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("contacts", "readwrite");
+    const store = tx.objectStore("contacts");
+
+    contacts.forEach(c => store.add(c));
+
+    tx.oncomplete = () => resolve(true);
+    tx.onabort = tx.onerror = () => reject(tx.error || new Error("Transaction aborted"));
+  });
+}
+`
+
+Upsert (insert or update) with put()
+
+`javascript
+async function upsertContact(contact) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("contacts", "readwrite");
+    const store = tx.objectStore("contacts");
+    const req = store.put(contact); // if id exists -> update, else insert (assigns new id only if missing)
+
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+`
+
+---
+
+Retrieving data (by key, index, ranges, cursors)
+
+Get by primary key
+
+`javascript
+async function getContact(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("contacts", "readonly");
+    const store = tx.objectStore("contacts");
+    const req = store.get(id);
+
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => reject(req.error);
+  });
+}
+`
+
+Get all records (careful with huge stores)
+
+`javascript
+async function getAllContacts() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("contacts", "readonly");
+    const store = tx.objectStore("contacts");
+    const req = store.getAll(); // returns an array
+
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+`
+
+Query by index (exact match)
+
+`javascript
+async function getByEmail(email) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("contacts", "readonly");
+    const store = tx.objectStore("contacts");
+    const index = store.index("email");
+    const req = index.get(email);
+
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => reject(req.error);
+  });
+}
+`
+
+Query by index with ranges
+
+Use IDBKeyRange for ranges and filtering.
+
+`javascript
+async function getByLastNameRange(startInclusive, endExclusive) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("contacts", "readonly");
+    const index = tx.objectStore("contacts").index("lastName");
+    const range = IDBKeyRange.bound(startInclusive, endExclusive, false, true); // [start, end)
+
+    const results = [];
+    const req = index.openCursor(range); // iterate in index order
+
+    req.onsuccess = () => {
+      const cursor = req.result;
+      if (cursor) {
+        results.push(cursor.value);
+        cursor.continue();
+      } else {
+        resolve(results);
+      }
+    };
+    req.onerror = () => reject(req.error);
+  });
+}
+`
+
+Query multiEntry index (array fields)
+
+`javascript
+async function getByTag(tag) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("contacts", "readonly");
+    const index = tx.objectStore("contacts").index("tags");
+    const range = IDBKeyRange.only(tag);
+
+    const results = [];
+    const req = index.openCursor(range);
+
+    req.onsuccess = () => {
+      const cursor = req.result;
+      if (cursor) {
+        results.push(cursor.value);
+        cursor.continue();
+      } else {
+        resolve(results);
+      }
+    };
+    req.onerror = () => reject(req.error);
+  });
+}
+`
+
+Cursors and pagination
+
+Cursors let you stream results without loading everything at once.
+
+`javascript
+async function getPageByLastName(pageSize, pageNumber) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("contacts", "readonly");
+    const index = tx.objectStore("contacts").index("lastName");
+    const results = [];
+
+    let skipped = 0;
+    const start = pageSize * (pageNumber - 1);
+
+    const req = index.openCursor(); // default ascending
+    req.onsuccess = () => {
+      const cursor = req.result;
+      if (!cursor) return resolve(results);
+
+      if (skipped < start) {
+        skipped++;
+        return cursor.continue();
+      }
+
+      results.push(cursor.value);
+      if (results.length >= pageSize) return resolve(results);
+
+      cursor.continue();
+    };
+    req.onerror = () => reject(req.error);
+  });
+}
+`
+
+---
+
+Deleting data (record, store, database)
+
+Delete a single record by key
+
+`javascript
+async function deleteContact(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("contacts", "readwrite");
+    const store = tx.objectStore("contacts");
+    const req = store.delete(id);
+
+    req.onsuccess = () => resolve(true);
+    req.onerror = () => reject(req.error);
+  });
+}
+`
+
+Clear an entire object store
+
+`javascript
+async function clearContacts() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("contacts", "readwrite");
+    const req = tx.objectStore("contacts").clear();
+
+    tx.oncomplete = () => resolve(true);
+    tx.onabort = tx.onerror = () => reject(tx.error || new Error("Clear failed"));
+  });
+}
+`
+
+Delete the whole database
+
+`javascript
+function deleteDatabase() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.deleteDatabase(DB_NAME);
+    req.onsuccess = () => resolve(true);
+    req.onerror = () => reject(req.error);
+    req.onblocked = () => {
+      console.warn("Delete blocked. Close other tabs using this database.");
+    };
+  });
+}
+`
+
+---
+
+Transactions and error handling
+
+- Transaction scope: Only the stores listed are accessible. Example: db.transaction(["contacts"], "readwrite").
+- Atomicity: All operations in a transaction either commit or roll back.
+- Events to watch:
+  - tx.oncomplete: All requests succeeded and committed.
+  - tx.onerror: A request failed; transaction aborted.
+  - tx.onabort: Manually aborted or failed.
+- Per-request errors: Each operation has onsuccess/onerror. A request error typically aborts the transaction unless handled.
+
+Pattern: wrap requests in Promises
+
+`javascript
+function promisifyRequest(req) {
+  return new Promise((resolve, reject) => {
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function exampleWrappedGet(id) {
+  const db = await openDB();
+  const tx = db.transaction("contacts", "readonly");
+  const store = tx.objectStore("contacts");
+  return await promisifyRequest(store.get(id));
+}
+`
+
+---
+
+Practical tips and best practices
+
+- Keep objects small: Store large blobs/files only when needed; consider referencing via URLs.
+- Design indexes from queries: Add indexes for the lookups you actually perform (e.g., email, lastName, tags).
+- Prefer put for upserts: Reduces branching when you don’t care if an item already exists.
+- Batch writes in one transaction: Fewer transactions = better performance and atomicity.
+- Handle upgrades carefully: Gate each migration with if (event.oldVersion < X).
+- Quota and persistence: Data persists but can be cleared by users or the browser under storage pressure. Don’t store secrets.
+- Avoid long-lived readwrite transactions: Open, do work, close. Keep the UI responsive.
+- Feature detection: Check window.indexedDB before use for embedded browsers or unusual environments.
+
+---
+
+Minimal end-to-end example (create, add, read, delete)
+
+`javascript
+(async function demo() {
+  // 1) Ensure DB and schema exist
+  const db = await openDB();
+
+  // 2) Add a contact
+  const id = await addContact({
+    firstName: "Sara",
+    lastName: "Moradi",
+    email: "sara@example.com",
+    phone: "+98 935 000 0000",
+    tags: ["work"]
+  });
+  console.log("Added id:", id);
+
+  // 3) Read it back
+  const contact = await getContact(id);
+  console.log("Loaded:", contact);
+
+  // 4) Delete it
+  await deleteContact(id);
+  console.log("Deleted:", id);
+})();
+`
+
+---

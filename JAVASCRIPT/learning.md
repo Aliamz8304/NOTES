@@ -3730,5 +3730,346 @@ window.onpopstate = function (event) {
 | `prompt()`    | Ask for input                    | `prompt("Your name?")`         |
 | `location`    | Read or change URL               | `location.href = "..."`        |
 | `history`     | Navigate or manipulate history   | `history.pushState(...)`       |
+---
 
+🏗 Object-Oriented Programming (OOP) in JavaScript
+
+OOP is a programming paradigm that organizes code into objects—bundles of data (properties) and behavior (methods). In JavaScript, OOP can be implemented using prototypes or ES6 classes.
+
+---
+
+1. 🧠 Core OOP Concepts
+
+| Concept       | Description | JavaScript Example |
+|---------------|-------------|--------------------|
+| Class     | A blueprint for creating objects | class Car { ... } |
+| Object    | An instance of a class | const myCar = new Car() |
+| Property  | Data stored in an object | this.color = "red" |
+| Method    | Function inside an object | drive() { ... } |
+| Constructor | Special method to initialize new objects | constructor(name) { ... } |
+| Inheritance | One class can extend another | class ElectricCar extends Car |
+| Encapsulation | Hiding internal details | Private fields #speed |
+| Polymorphism | Same method name, different behavior | Overriding drive() in subclasses |
+
+---
+
+2. 📜 Creating Objects in JavaScript
+
+a) Object Literal
+
+```javascript
+const person = {
+  name: "Ali",
+  greet() {
+    console.log(Hello, my name is ${this.name});
+  }
+};
+person.greet();
+```
+
+---
+
+b) Constructor Function (Pre-ES6)
+
+```javascript
+function Car(brand, color) {
+  this.brand = brand;
+  this.color = color;
+}
+Car.prototype.drive = function () {
+  console.log(${this.brand} is driving);
+};
+
+const car1 = new Car("Toyota", "red");
+car1.drive();
+```
+
+---
+
+c) ES6 Class Syntax
+
+```javascript
+class Car {
+  constructor(brand, color) {
+    this.brand = brand;
+    this.color = color;
+  }
+  drive() {
+    console.log(${this.brand} is driving);
+  }
+}
+
+const car2 = new Car("Tesla", "black");
+car2.drive();
+```
+
+---
+
+3. 🧬 Inheritance
+
+Inheritance allows one class to reuse and extend another class’s functionality.
+
+```javascript
+class ElectricCar extends Car {
+  constructor(brand, color, battery) {
+    super(brand, color); // Call parent constructor
+    this.battery = battery;
+  }
+  charge() {
+    console.log(${this.brand} is charging);
+  }
+}
+
+const myEV = new ElectricCar("Tesla", "white", "100kWh");
+myEV.drive();  // from Car
+myEV.charge(); // from ElectricCar
+```
+
+---
+
+4. 🔒 Encapsulation (Private Fields & Methods)
+
+Encapsulation hides internal details from outside code.
+
+```javascript
+class BankAccount {
+
+balance = 0; // private field
+
+  deposit(amount) {
+    if (amount > 0) this.#balance += amount;
+  }
+  getBalance() {
+    return this.#balance;
+  }
+}
+
+const account = new BankAccount();
+account.deposit(500);
+console.log(account.getBalance()); // 500
+// account.#balance ❌ Error: private field
+```
+
+---
+
+5. 🎭 Polymorphism
+
+Polymorphism lets different classes define the same method name but with different behavior.
+
+```javascript
+class Animal {
+  speak() {
+    console.log("Some generic sound");
+  }
+}
+
+class Dog extends Animal {
+  speak() {
+    console.log("Woof!");
+  }
+}
+
+class Cat extends Animal {
+  speak() {
+    console.log("Meow!");
+  }
+}
+
+const animals = [new Dog(), new Cat()];
+animals.forEach(a => a.speak());
+```
+
+---
+
+6. 🧩 Static Methods and Properties
+
+Static members belong to the class itself, not instances.
+
+```javascript
+class MathHelper {
+  static square(x) {
+    return x * x;
+  }
+}
+
+console.log(MathHelper.square(5)); // 25
+```
+
+---
+
+7. 🛠 Object Prototypes (Under the Hood)
+
+Every object in JavaScript has a hidden [[Prototype]] linking to another object. Methods defined on a class are actually stored on its prototype.
+
+```javascript
+console.log(Object.getPrototypeOf(car2) === Car.prototype); // true
+```
+
+---
+
+8. 🧠 Best Practices for OOP in JavaScript
+
+- Use classes for clear, modern syntax.
+- Keep methods focused and small.
+- Use private fields for sensitive data.
+- Favor composition over deep inheritance chains.
+- Document your class APIs for maintainability.
+
+---
+
+9. 🧪 Mini Project: OOP To-Do List
+
+```javascript
+class Task {
+  constructor(title) {
+    this.title = title;
+    this.completed = false;
+  }
+  toggle() {
+    this.completed = !this.completed;
+  }
+}
+
+class TodoList {
+  constructor() {
+    this.tasks = [];
+  }
+  addTask(title) {
+    this.tasks.push(new Task(title));
+  }
+  showTasks() {
+    this.tasks.forEach(t =>
+      console.log(${t.title} - ${t.completed ? "✅" : "❌"})
+    );
+  }
+}
+
+const list = new TodoList();
+list.addTask("Learn OOP");
+list.addTask("Build a project");
+list.showTasks();
+list.tasks[0].toggle();
+list.showTasks();
+```
+---
+
+🔮 Advanced OOP Topics in JavaScript
+
+1. Getters and Setters
+Control how properties are read and written.
+
+```javascript
+class Person {
+  constructor(name) {
+    this._name = name;
+  }
+  get name() {
+    return this._name.toUpperCase();
+  }
+  set name(newName) {
+    if (newName.length > 0) this._name = newName;
+  }
+}
+
+const p = new Person("Ali");
+console.log(p.name); // "ALI"
+p.name = "Sara";
+```
+
+---
+
+2. Abstract Classes & Interfaces (Patterns)
+JavaScript doesn’t have true abstract classes, but you can simulate them.
+
+```javascript
+class Shape {
+  constructor() {
+    if (new.target === Shape) {
+      throw new Error("Cannot instantiate abstract class");
+    }
+  }
+  area() {
+    throw new Error("Method 'area()' must be implemented");
+  }
+}
+```
+
+---
+
+3. Mixins
+Reuse methods across unrelated classes.
+
+```javascript
+const CanFly = {
+  fly() {
+    console.log(${this.name} is flying);
+  }
+};
+
+class Bird {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+Object.assign(Bird.prototype, CanFly);
+
+const parrot = new Bird("Parrot");
+parrot.fly();
+```
+
+---
+
+4. Composition over Inheritance
+Instead of deep class chains, build objects from smaller capabilities.
+
+```javascript
+function canWalk(obj) {
+  obj.walk = () => console.log("Walking...");
+}
+function canSwim(obj) {
+  obj.swim = () => console.log("Swimming...");
+}
+
+const person = {};
+canWalk(person);
+canSwim(person);
+person.walk();
+person.swim();
+```
+
+---
+
+5. Design Patterns in OOP
+- Singleton – One instance only
+- Factory – Create objects without specifying exact class
+- Observer – Subscribe/notify pattern
+- Decorator – Add behavior dynamically
+
+---
+
+6. Private Methods (ES2022)
+```javascript
+class Example {
+
+secretMethod() {
+    console.log("Hidden logic");
+  }
+  callSecret() {
+    this.#secretMethod();
+  }
+}
+```
+
+---
+
+7. Class Fields & Static Blocks
+```javascript
+class Config {
+  static settings = {};
+  static {
+    Config.settings.theme = "dark";
+  }
+}
+```
 ---
